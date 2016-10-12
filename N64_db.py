@@ -54,7 +54,34 @@ def execute_query(query):
     rows = c.fetchall()
     conn.close()
 
-    return headers, rows
+    return CapitalizeHeader(headers), BinaryConvert(headers, rows)
+
+
+def CapitalizeHeader(headers):
+    headers = [h.title() for h in headers]
+    headers = ['ID' if h == 'Id' else h for h in headers]
+
+    return ['Alternate Title(s)' if h == 'Alt_Title' else h for h in headers]
+
+
+def BinaryConvert(headers, rows):
+
+    if 'got' in headers:
+        index = headers.index('got')
+
+        FinalRows = []
+
+        for row in rows:
+            tmp = list(row)
+            if row[index] == 0:
+                tmp[index] = 'No'
+            else:
+                tmp[index] = 'Yes'
+            FinalRows.append(tmp)
+
+        return FinalRows
+    else:
+        return rows
 
 
 def MakeTable(headers, data, filename):
@@ -100,7 +127,7 @@ def MakeTable(headers, data, filename):
 
 queries = {
     'pal': 'select title, year, id, got from games where regions like \"%PAL%\"',
-    'got': 'select title, year, id, publisher, genre from games where got==1 and regions like \"%PAL%\"',
+    'got': 'select title, year, id, publisher, genre, got from games where got==1 and regions like \"%PAL%\"',
     'old': 'select title, alt_title, genre, year from games where regions like \"%PAL%\" and year < 1999'
 }
 
