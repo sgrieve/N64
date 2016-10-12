@@ -7,9 +7,6 @@ import simpletable as st
 
 def build_db():
 
-    if os.path.isfile('N64.db'):
-        os.remove('N64.db')
-
     conn = sqlite3.connect('N64.db')
     conn.text_factory = str
 
