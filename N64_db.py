@@ -43,6 +43,19 @@ def update_game(ID):
     conn.close()
 
 
+def HowMany():
+    conn = sqlite3.connect('N64.db')
+    conn.text_factory = str
+
+    c = conn.cursor()
+    c.execute('SELECT id from games where got=1')
+
+    rows = c.fetchall()
+    conn.close()
+
+    return len(rows)
+
+
 def execute_query(query):
     conn = sqlite3.connect('N64.db')
     conn.text_factory = str
@@ -123,10 +136,14 @@ def MakeTable(headers, data, filename):
     page.save('{0}.html'.format(filename))
 
 
-# update_game(23)
+print HowMany()
+
+'''
+update_game(game)
 
 queries = {
     'pal': 'select title, year, id, got from games where regions like \"%PAL%\"',
+    'all': 'select title, year, id, got from games',
     'got': 'select title, year, id, publisher, genre, got from games where got==1 and regions like \"%PAL%\"',
     'old': 'select title, alt_title, genre, year from games where regions like \"%PAL%\" and year < 1999'
 }
@@ -135,3 +152,4 @@ queries = {
 for key in queries:
     headers, rows = execute_query(queries[key])
     MakeTable(headers, rows, key)
+'''
